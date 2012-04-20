@@ -25,7 +25,7 @@
  */
 
 #include <config.h>
-#include <glib/gerror.h>
+#include <glib.h>
 #include "lm-error.h"
 
 GQuark
