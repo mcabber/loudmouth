@@ -10,6 +10,7 @@ loudmouth.hierarchy
 loudmouth.interfaces
 loudmouth.prerequisites
 loudmouth.signals
+setup-build.stamp
 scan-build.stamp
 sgml-build.stamp
 sgml.stamp

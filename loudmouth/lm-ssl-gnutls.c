@@ -37,9 +37,9 @@
 struct _LmSSL {
     LmSSLBase base;
 
-    gnutls_session                 gnutls_session;
-    gnutls_certificate_credentials gnutls_xcred;
-    gboolean                       started;
+    gnutls_session_t                 gnutls_session;
+    gnutls_certificate_credentials_t gnutls_xcred;
+    gboolean                         started;
 };
 
 static gboolean       ssl_verify_certificate    (LmSSL       *ssl,
@@ -106,10 +106,10 @@ ssl_verify_certificate (LmSSL *ssl, const gchar *server)
     }
 
     if (gnutls_certificate_type_get (ssl->gnutls_session) == GNUTLS_CRT_X509) {
-        const gnutls_datum* cert_list;
+        const gnutls_datum_t* cert_list;
         guint cert_list_size;
         size_t digest_size;
-        gnutls_x509_crt cert;
+        gnutls_x509_crt_t cert;
 
         cert_list = gnutls_certificate_get_peers (ssl->gnutls_session, &cert_list_size);
         if (cert_list == NULL) {

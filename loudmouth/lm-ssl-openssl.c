@@ -41,7 +41,7 @@
 struct _LmSSL {
     LmSSLBase base;
 
-    SSL_METHOD *ssl_method;
+    const SSL_METHOD *ssl_method;
     SSL_CTX *ssl_ctx;
     SSL *ssl;
     /*BIO *bio;*/

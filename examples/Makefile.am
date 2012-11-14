@@ -1,6 +1,6 @@
 include $(top_srcdir)/build/Makefile.am.lm
 
-INCLUDES =                                          \
+AM_CPPFLAGS =                                       \
     -I$(top_srcdir)                                 \
     $(LOUDMOUTH_CFLAGS)
 

@@ -27,3 +27,4 @@ libtool
 *.spec
 *.tar.gz
 *.tar.bz2
+*~
