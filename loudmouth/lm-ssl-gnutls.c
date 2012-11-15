@@ -196,17 +196,11 @@ _lm_ssl_begin (LmSSL *ssl, gint fd, const gchar *server, GError **error)
 {
     int ret;
     gboolean auth_ok = TRUE;
-    const int cert_type_priority[] =
-        { GNUTLS_CRT_X509, GNUTLS_CRT_OPENPGP, 0 };
-    const int compression_priority[] =
-        { GNUTLS_COMP_DEFLATE, GNUTLS_COMP_NULL, 0 };
 
     gnutls_init (&ssl->gnutls_session, GNUTLS_CLIENT);
-    gnutls_set_default_priority (ssl->gnutls_session);
-    gnutls_certificate_type_set_priority (ssl->gnutls_session,
-                                          cert_type_priority);
-    gnutls_compression_set_priority (ssl->gnutls_session,
-                                     compression_priority);
+    gnutls_priority_set_direct (ssl->gnutls_session,
+                        "NORMAL:+CTYPE-X.509:+CTYPE-OPENPGP:+COMP-DEFLATE",
+			NULL);
     gnutls_credentials_set (ssl->gnutls_session,
                             GNUTLS_CRD_CERTIFICATE,
                             ssl->gnutls_xcred);
