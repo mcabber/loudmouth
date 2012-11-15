@@ -199,7 +199,7 @@ _lm_ssl_begin (LmSSL *ssl, gint fd, const gchar *server, GError **error)
 
     gnutls_init (&ssl->gnutls_session, GNUTLS_CLIENT);
     gnutls_priority_set_direct (ssl->gnutls_session,
-                        "NORMAL:+CTYPE-X.509:+CTYPE-OPENPGP:+COMP-DEFLATE",
+                        "NORMAL:+CTYPE-X.509:+CTYPE-OPENPGP:+COMP-DEFLATE:+COMP-NULL",
 			NULL);
     gnutls_credentials_set (ssl->gnutls_session,
                             GNUTLS_CRD_CERTIFICATE,
