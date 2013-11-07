@@ -314,6 +314,13 @@ gboolean
 _lm_sock_set_keepalive (LmOldSocketT sock, int delay)
 {
 #ifdef USE_TCP_KEEPALIVES
+
+#ifdef __APPLE__
+#ifndef TCP_KEEPIDLE
+#define TCP_KEEPIDLE TCP_KEEPALIVE
+#endif
+#endif
+
     int opt;
 
     opt = 1;
