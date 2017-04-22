@@ -248,7 +248,7 @@ ssl_verify_certificate (LmSSL *ssl, const gchar *server)
                "%s: server = '%s', cn = '%s'\n",
                __FILE__, server, cn);
 
-        if (cn != NULL && ssl_match_domain_name(server, cn) {
+        if (cn != NULL && ssl_match_domain_name(server, cn)) {
             match_result = TRUE;
         } else {
             /* g_log (LM_LOG_DOMAIN, LM_LOG_LEVEL_SSL, "%s: CN does not match server name\n", __FILE__); */
