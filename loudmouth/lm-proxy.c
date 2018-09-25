@@ -218,12 +218,12 @@ _lm_proxy_connect_cb (GIOChannel *source, GIOCondition condition, gpointer data)
 
     g_return_val_if_fail (proxy != NULL, FALSE);
 
-    if (condition == G_IO_ERR) {
+    if (condition & G_IO_ERR) {
         len = sizeof (error);
         _lm_sock_get_error (connect_data->fd, &error, &len);
         _lm_old_socket_failed_with_error (connect_data, error);
         return FALSE;
-    } else if (condition == G_IO_OUT) {
+    } else if (condition & G_IO_OUT) {
         if (!proxy_negotiate (lm_connection_get_proxy (connection), connect_data->fd, lm_connection_get_server (connection), lm_connection_get_port (connection))) {
             _lm_old_socket_failed (connect_data);
             return FALSE;
