@@ -517,7 +517,7 @@ socket_connect_cb (GIOChannel   *source,
     /* addr = connect_data->current_addr; */
     fd = g_io_channel_unix_get_fd (source);
 
-    if (condition == G_IO_ERR) {
+    if (condition & G_IO_ERR) {
         len = sizeof (err);
         _lm_sock_get_error (fd, &err, &len);
         if (!_lm_sock_is_blocking_error (err)) {
