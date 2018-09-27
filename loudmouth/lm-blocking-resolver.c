@@ -38,10 +38,10 @@
 
 #define SRV_LEN 8192
 
-#define GET_PRIV(obj) (G_TYPE_INSTANCE_GET_PRIVATE ((obj), LM_TYPE_BLOCKING_RESOLVER, LmBlockingResolverPriv))
+#define GET_PRIV(obj) (lm_blocking_resolver_get_instance_private (LM_BLOCKING_RESOLVER(obj)))
 
-typedef struct LmBlockingResolverPriv LmBlockingResolverPriv;
-struct LmBlockingResolverPriv {
+typedef struct LmBlockingResolverPrivate LmBlockingResolverPrivate;
+struct LmBlockingResolverPrivate {
     GSource *idle_source;
 };
 
@@ -49,7 +49,7 @@ static void     blocking_resolver_dispose     (GObject       *object);
 static void     blocking_resolver_lookup      (LmResolver    *resolver);
 static void     blocking_resolver_cancel      (LmResolver    *resolver);
 
-G_DEFINE_TYPE (LmBlockingResolver, lm_blocking_resolver, LM_TYPE_RESOLVER)
+G_DEFINE_TYPE_WITH_PRIVATE (LmBlockingResolver, lm_blocking_resolver, LM_TYPE_RESOLVER)
 
 static void
 lm_blocking_resolver_class_init (LmBlockingResolverClass *class)
@@ -61,9 +61,6 @@ lm_blocking_resolver_class_init (LmBlockingResolverClass *class)
 
     resolver_class->lookup = blocking_resolver_lookup;
     resolver_class->cancel = blocking_resolver_cancel;
-
-    g_type_class_add_private (object_class,
-                              sizeof (LmBlockingResolverPriv));
 }
 
 static void
@@ -191,7 +188,7 @@ blocking_resolver_lookup_service (LmBlockingResolver *resolver)
 static gboolean
 blocking_resolver_idle_lookup (LmBlockingResolver *resolver)
 {
-    LmBlockingResolverPriv *priv = GET_PRIV (resolver);
+    LmBlockingResolverPrivate *priv = GET_PRIV (resolver);
     gint                    type;
 
     /* Start the DNS querying */
@@ -216,7 +213,7 @@ blocking_resolver_idle_lookup (LmBlockingResolver *resolver)
 static void
 blocking_resolver_lookup (LmResolver *resolver)
 {
-    LmBlockingResolverPriv *priv;
+    LmBlockingResolverPrivate *priv;
     GMainContext           *context;
 
     g_return_if_fail (LM_IS_BLOCKING_RESOLVER (resolver));
@@ -233,7 +230,7 @@ blocking_resolver_lookup (LmResolver *resolver)
 static void
 blocking_resolver_cancel (LmResolver *resolver)
 {
-    LmBlockingResolverPriv *priv;
+    LmBlockingResolverPrivate *priv;
 
     g_return_if_fail (LM_IS_BLOCKING_RESOLVER (resolver));
 

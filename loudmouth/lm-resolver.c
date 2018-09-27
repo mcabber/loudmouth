@@ -36,10 +36,10 @@
 #include "lm-marshal.h"
 #include "lm-resolver.h"
 
-#define GET_PRIV(obj) (G_TYPE_INSTANCE_GET_PRIVATE ((obj), LM_TYPE_RESOLVER, LmResolverPriv))
+#define GET_PRIV(obj) (lm_resolver_get_instance_private (LM_RESOLVER(obj)))
 
-typedef struct LmResolverPriv LmResolverPriv;
-struct LmResolverPriv {
+typedef struct LmResolverPrivate LmResolverPrivate;
+struct LmResolverPrivate {
     GMainContext       *context;
 
     LmResolverCallback  callback;
@@ -72,7 +72,7 @@ static void     resolver_set_property        (GObject           *object,
                                               const GValue      *value,
                                               GParamSpec        *pspec);
 
-G_DEFINE_TYPE (LmResolver, lm_resolver, G_TYPE_OBJECT)
+G_DEFINE_TYPE_WITH_PRIVATE (LmResolver, lm_resolver, G_TYPE_OBJECT)
 
 enum {
     PROP_0,
@@ -153,8 +153,6 @@ lm_resolver_class_init (LmResolverClass *class)
                                                           "Protocol for SRV lookup",
                                                           NULL,
                                                           G_PARAM_READWRITE | G_PARAM_CONSTRUCT_ONLY));
-
-    g_type_class_add_private (object_class, sizeof (LmResolverPriv));
 }
 
 static void
@@ -165,7 +163,7 @@ lm_resolver_init (LmResolver *resolver)
 static void
 resolver_dispose (GObject *object)
 {
-    LmResolverPriv *priv = GET_PRIV (object);
+    LmResolverPrivate *priv = GET_PRIV (object);
 
     if (priv->context) {
         g_main_context_unref (priv->context);
@@ -178,7 +176,7 @@ resolver_dispose (GObject *object)
 static void
 resolver_finalize (GObject *object)
 {
-    LmResolverPriv *priv;
+    LmResolverPrivate *priv;
 
     priv = GET_PRIV (object);
 
@@ -200,7 +198,7 @@ resolver_get_property (GObject    *object,
                        GValue     *value,
                        GParamSpec *pspec)
 {
-    LmResolverPriv *priv;
+    LmResolverPrivate *priv;
 
     priv = GET_PRIV (object);
 
@@ -238,7 +236,7 @@ resolver_set_property (GObject      *object,
                        const GValue *value,
                        GParamSpec   *pspec)
 {
-    LmResolverPriv *priv;
+    LmResolverPrivate *priv;
 
     priv = GET_PRIV (object);
 
@@ -311,7 +309,7 @@ lm_resolver_new_for_host (const gchar        *host,
                           gpointer            user_data)
 {
     LmResolver     *resolver;
-    LmResolverPriv *priv;
+    LmResolverPrivate *priv;
 
     g_return_val_if_fail (host != NULL, NULL);
     g_return_val_if_fail (callback != NULL, NULL);
@@ -337,7 +335,7 @@ lm_resolver_new_for_service (const gchar        *domain,
                              gpointer            user_data)
 {
     LmResolver     *resolver;
-    LmResolverPriv *priv;
+    LmResolverPrivate *priv;
 
     g_return_val_if_fail (domain != NULL, NULL);
     g_return_val_if_fail (service != NULL, NULL);
@@ -383,7 +381,7 @@ lm_resolver_cancel (LmResolver *resolver)
 struct addrinfo *
 lm_resolver_results_get_next (LmResolver *resolver)
 {
-    LmResolverPriv  *priv;
+    LmResolverPrivate  *priv;
     struct addrinfo *ret_val;
 
     g_return_val_if_fail (LM_IS_RESOLVER (resolver), NULL);
@@ -411,7 +409,7 @@ skipresult:
 void
 lm_resolver_results_reset (LmResolver *resolver)
 {
-    LmResolverPriv *priv;
+    LmResolverPrivate *priv;
 
     g_return_if_fail (LM_IS_RESOLVER (resolver));
 
@@ -437,7 +435,7 @@ _lm_resolver_set_result (LmResolver       *resolver,
                          LmResolverResult  result,
                          struct addrinfo  *results)
 {
-    LmResolverPriv *priv;
+    LmResolverPrivate *priv;
 
     g_return_if_fail (LM_IS_RESOLVER (resolver));
 
