@@ -55,7 +55,7 @@ AC_SUBST([LT_CURRENT])
 AC_SUBST([LT_REVISION])
 AC_SUBST([LT_AGE])
 
-AM_PATH_GLIB_2_0
+AM_PATH_GLIB_2_0(2.38.0)
 
 AC_CHECK_HEADERS([arpa/inet.h fcntl.h memory.h netdb.h netinet/in.h netinet/in_systm.h stdlib.h string.h sys/socket.h sys/time.h unistd.h])
 AC_CHECK_HEADERS([winsock2.h arpa/nameser_compat.h])
@@ -80,8 +80,8 @@ changequote([,])dnl
 AC_SUBST(CFLAGS)
 AC_SUBST(LDFLAGS)
 
-GLIB2_REQUIRED=2.12.4
-GLIB2_TEST_REQUIRED=2.16.0
+GLIB2_REQUIRED=2.38.0
+GLIB2_TEST_REQUIRED=2.38.0
 GNUTLS_REQUIRED=3.0.20
 LIBTASN1_REQUIRED=0.2.6
 
