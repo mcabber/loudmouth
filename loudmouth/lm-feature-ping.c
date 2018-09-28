@@ -28,10 +28,10 @@
 
 #define XMPP_NS_PING "urn:xmpp:ping"
 
-#define GET_PRIV(obj) (G_TYPE_INSTANCE_GET_PRIVATE ((obj), LM_TYPE_FEATURE_PING, LmFeaturePingPriv))
+#define GET_PRIV(obj) (lm_feature_ping_get_instance_private (LM_FEATURE_PING(obj)))
 
-typedef struct LmFeaturePingPriv LmFeaturePingPriv;
-struct LmFeaturePingPriv {
+typedef struct LmFeaturePingPrivate LmFeaturePingPrivate;
+struct LmFeaturePingPrivate {
     LmConnection *connection;
     guint         keep_alive_rate;
     GSource      *keep_alive_source;
@@ -55,7 +55,7 @@ feature_ping_keep_alive_reply                    (LmMessageHandler *handler,
                                                   gpointer          user_data);
 static gboolean feature_ping_send_keep_alive     (LmFeaturePing    *fp);
 
-G_DEFINE_TYPE (LmFeaturePing, lm_feature_ping, G_TYPE_OBJECT)
+G_DEFINE_TYPE_WITH_PRIVATE (LmFeaturePing, lm_feature_ping, G_TYPE_OBJECT)
 
 enum {
     PROP_0,
@@ -103,8 +103,6 @@ lm_feature_ping_class_init (LmFeaturePingClass *class)
                       NULL, NULL,
                       _lm_marshal_VOID__VOID,
                       G_TYPE_NONE, 0);
-
-    g_type_class_add_private (object_class, sizeof (LmFeaturePingPriv));
 }
 
 static void
@@ -127,7 +125,7 @@ feature_ping_get_property (GObject    *object,
                            GValue     *value,
                            GParamSpec *pspec)
 {
-    LmFeaturePingPriv *priv;
+    LmFeaturePingPrivate *priv;
 
     priv = GET_PRIV (object);
 
@@ -147,7 +145,7 @@ feature_ping_set_property (GObject      *object,
                            const GValue *value,
                            GParamSpec   *pspec)
 {
-    LmFeaturePingPriv *priv;
+    LmFeaturePingPrivate *priv;
 
     priv = GET_PRIV (object);
 
@@ -171,7 +169,7 @@ feature_ping_keep_alive_reply (LmMessageHandler *handler,
                                LmMessage        *m,
                                gpointer          user_data)
 {
-    LmFeaturePingPriv *priv;
+    LmFeaturePingPrivate *priv;
 
     priv = GET_PRIV (user_data);
 
@@ -183,7 +181,7 @@ feature_ping_keep_alive_reply (LmMessageHandler *handler,
 static gboolean
 feature_ping_send_keep_alive (LmFeaturePing *fp)
 {
-    LmFeaturePingPriv *priv;
+    LmFeaturePingPrivate *priv;
     LmMessage         *ping;
     LmMessageNode     *ping_node;
     LmMessageHandler  *keep_alive_handler;
@@ -237,7 +235,7 @@ feature_ping_send_keep_alive (LmFeaturePing *fp)
 void
 lm_feature_ping_start (LmFeaturePing *fp)
 {
-    LmFeaturePingPriv *priv;
+    LmFeaturePingPrivate *priv;
 
     g_return_if_fail (LM_IS_FEATURE_PING (fp));
 
@@ -260,7 +258,7 @@ lm_feature_ping_start (LmFeaturePing *fp)
 void
 lm_feature_ping_stop (LmFeaturePing *fp)
 {
-    LmFeaturePingPriv *priv;
+    LmFeaturePingPrivate *priv;
 
     g_return_if_fail (LM_IS_FEATURE_PING (fp));
 
