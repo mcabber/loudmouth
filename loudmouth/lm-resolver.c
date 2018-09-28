@@ -390,7 +390,6 @@ lm_resolver_results_get_next (LmResolver *resolver)
 
     priv = GET_PRIV (resolver);
 
-skipresult:
     if (!priv->current_result) {
         g_log (LM_LOG_DOMAIN, LM_LOG_LEVEL_VERBOSE,
                "no more results from resolver\n");
@@ -399,11 +398,6 @@ skipresult:
 
     ret_val = priv->current_result;
     priv->current_result = priv->current_result->ai_next;
-    if (ret_val->ai_family != AF_INET) {
-        g_log (LM_LOG_DOMAIN, LM_LOG_LEVEL_VERBOSE,
-               "skipping non-IPv4 resolver entry\n");
-        goto skipresult;
-    };
 
     return ret_val;
 }
