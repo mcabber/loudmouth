@@ -529,8 +529,8 @@ socket_connect_cb (GIOChannel   *source,
              * from it (by connecting to the next host) */
             if (!_lm_old_socket_failed_with_error (connect_data, err)) {
                 socket->watch_connect = NULL;
-                goto out;
             }
+            goto out;
         }
     }
 
