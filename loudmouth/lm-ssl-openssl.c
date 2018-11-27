@@ -362,9 +362,11 @@ _lm_ssl_initialize (LmSSL *ssl)
     /*const char *cert_file = NULL;*/
 
     if (!initialized) {
+#if OPENSSL_VERSION_NUMBER < 0x10100000L
         SSL_library_init();
         /* FIXME: Is this needed when we are not in debug? */
         SSL_load_error_strings();
+#endif
         initialized = TRUE;
     }
 
