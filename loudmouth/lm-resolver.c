@@ -21,7 +21,7 @@
 #include <string.h>
 
 /* Needed on Mac OS X */
-#if HAVE_ARPA_NAMESER_COMPAT_H
+#if defined(__APPLE__) && HAVE_ARPA_NAMESER_COMPAT_H
 #include <arpa/nameser_compat.h>
 #endif
 
