@@ -313,9 +313,11 @@ _lm_ssl_begin (LmSSL *ssl, gint fd, const gchar *server, GError **error)
                 gnutls_cipher_suite_get_name(gnutls_kx_get(ssl->gnutls_session),
                                              gnutls_cipher_get(ssl->gnutls_session),
                                              gnutls_mac_get(ssl->gnutls_session)));
+#if GNUTLS_VERSION_NUMBER < 0x030600
     lm_verbose ("GNUTLS negotiated compression: %s",
                 gnutls_compression_get_name (gnutls_compression_get
                                              (ssl->gnutls_session)));
+#endif
 
     ssl->started = TRUE;
 
