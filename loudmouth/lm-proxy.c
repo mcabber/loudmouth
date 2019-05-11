@@ -218,7 +218,7 @@ _lm_proxy_connect_cb (GIOChannel *source, GIOCondition condition, gpointer data)
 
     g_return_val_if_fail (proxy != NULL, FALSE);
 
-    if (condition & G_IO_ERR) {
+    if (condition & (G_IO_ERR | G_IO_HUP | G_IO_NVAL)) {
         len = sizeof (error);
         _lm_sock_get_error (connect_data->fd, &error, &len);
         _lm_old_socket_failed_with_error (connect_data, error);

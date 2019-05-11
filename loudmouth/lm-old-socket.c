@@ -518,7 +518,7 @@ socket_connect_cb (GIOChannel   *source,
     /* addr = connect_data->current_addr; */
     fd = g_io_channel_unix_get_fd (source);
 
-    if (condition & G_IO_ERR) {
+    if (condition & (G_IO_ERR | G_IO_HUP | G_IO_NVAL)) {
         len = sizeof (err);
         _lm_sock_get_error (fd, &err, &len);
         if (!_lm_sock_is_blocking_error (err)) {
@@ -664,14 +664,14 @@ socket_do_connect (LmConnectData *connect_data)
         socket->watch_connect =
             lm_misc_add_io_watch (socket->context,
                                   connect_data->io_channel,
-                                  G_IO_OUT|G_IO_ERR,
+                                  G_IO_OUT | G_IO_ERR | G_IO_HUP | G_IO_NVAL,
                                   (GIOFunc) _lm_proxy_connect_cb,
                                   connect_data);
     } else {
         socket->watch_connect =
             lm_misc_add_io_watch (socket->context,
                                   connect_data->io_channel,
-                                  G_IO_OUT|G_IO_ERR,
+                                  G_IO_OUT | G_IO_ERR | G_IO_HUP | G_IO_NVAL,
                                   (GIOFunc) socket_connect_cb,
                                   connect_data);
     }
