@@ -161,10 +161,6 @@ parser_end_node_cb (GMarkupParseContext  *context,
 
     //cur_node->name doesn't have namespace prefix anymore, node_name does.
     if (strcmp (parser->cur_node->name, node_name_unq) != 0) {
-        if (strcmp (node_name, "stream:stream")) {
-            g_print ("Got an stream:stream end\n");
-        }
-
         g_log (LM_LOG_DOMAIN, LM_LOG_LEVEL_PARSER,
                "Trying to close node that isn't open: %s",
                node_name_unq);

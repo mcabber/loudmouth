@@ -641,7 +641,6 @@ socket_do_connect (LmConnectData *connect_data)
                               addr->ai_protocol);
 
     if (!_LM_SOCK_VALID (fd)) {
-        g_print("invalid fd\n");
         g_log (LM_LOG_DOMAIN, LM_LOG_LEVEL_NET,
                "Failed making socket, error:%d...\n",
                _lm_sock_get_last_error ());
@@ -683,7 +682,6 @@ socket_do_connect (LmConnectData *connect_data)
         err = _lm_sock_get_last_error ();
         if (!_lm_sock_is_blocking_error (err)) {
             _lm_sock_close (connect_data->fd);
-            g_print("unable to connect\n");
             return _lm_old_socket_failed_with_error (connect_data, err);
         }
     }
