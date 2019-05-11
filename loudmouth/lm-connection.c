@@ -896,6 +896,15 @@ connection_socket_connect_cb (LmOldSocket  *socket,
                               gboolean      result,
                               LmConnection *connection)
 {
+    /* FIXME: Set up according to XMPP 1.0 specification */
+    /*        StartTLS and the like */
+    if (result == TRUE && !connection_send (connection,
+                          "<?xml version='1.0' encoding='UTF-8'?>", -1,
+                          NULL)) {
+        lm_verbose ("Failed to send xml version and encoding\n");
+        result = FALSE;
+    }
+
     if (result == FALSE) {
         connection_do_close (connection);
 
@@ -909,21 +918,9 @@ connection_socket_connect_cb (LmOldSocket  *socket,
             _lm_utils_free_callback (cb);
         }
 
-        return;
+    } else {
+        connection_send_stream_header (connection);
     }
-
-    /* FIXME: Set up according to XMPP 1.0 specification */
-    /*        StartTLS and the like */
-    if (!connection_send (connection,
-                          "<?xml version='1.0' encoding='UTF-8'?>", -1,
-                          NULL)) {
-        lm_verbose ("Failed to send xml version and encoding\n");
-        connection_do_close (connection);
-
-        return;
-    }
-
-    connection_send_stream_header (connection);
 }
 
 static gboolean
@@ -969,6 +966,7 @@ connection_send_stream_header (LmConnection *connection)
     if (!lm_connection_send (connection, m, NULL)) {
         lm_verbose ("Failed to send stream information\n");
         connection_do_close (connection);
+        connection_signal_disconnect (connection, LM_DISCONNECT_REASON_ERROR);
     }
 
     lm_message_unref (m);
@@ -1040,10 +1038,11 @@ connection_bind_reply (LmMessageHandler *handler,
     lm_message_unref (m);
     if (result < 0) {
         connection_do_close (connection);
+        connection_signal_disconnect (connection, LM_DISCONNECT_REASON_ERROR);
+    } else {
+        /* We may finally tell the client they're authorized */
+        connection_call_auth_cb (connection, TRUE);
     }
-
-    /* We may finally tell the client they're authorized */
-    connection_call_auth_cb (connection, TRUE);
 
     return LM_HANDLER_RESULT_REMOVE_MESSAGE;
 }
@@ -1125,6 +1124,8 @@ connection_features_cb (LmMessageHandler *handler,
             g_log (LM_LOG_DOMAIN, LM_LOG_LEVEL_SASL,
                    "%s: can't send resource binding request\n", G_STRFUNC);
             connection_do_close (connection);
+            connection_signal_disconnect (connection,
+                                          LM_DISCONNECT_REASON_ERROR);
         }
     }
 
