@@ -100,31 +100,10 @@ blocking_resolver_lookup_host (LmBlockingResolver *resolver)
     if (err != 0) {
         _lm_resolver_set_result (LM_RESOLVER (resolver), LM_RESOLVER_RESULT_FAILED,
                                  NULL);
-
         retval = FALSE;
-    }
-
-    if (ans == NULL) {
-        /* Couldn't find any results */
-        g_object_ref (resolver);
-        _lm_resolver_set_result (LM_RESOLVER (resolver), LM_RESOLVER_RESULT_FAILED,
-                                 NULL);
-
-        g_object_unref (resolver);
-        retval = FALSE;
-    }
-
-    /* FIXME: How to set and iterate the results */
-    /*priv->results    = ans;
-      priv->cur_result = ans; */
-
-    if (retval) {
-        g_object_ref (resolver);
-
+    } else {
         _lm_resolver_set_result (LM_RESOLVER (resolver), LM_RESOLVER_RESULT_OK,
                                  ans);
-
-        g_object_unref (resolver);
     }
 
     g_free (host);
