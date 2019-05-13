@@ -21,10 +21,10 @@
 #include "lm-marshal.h"
 #include "lm-dummy.h"
 
-#define GET_PRIV(obj) (G_TYPE_INSTANCE_GET_PRIVATE ((obj), LM_TYPE_DUMMY, LmDummyPriv))
+#define GET_PRIV(obj) (G_TYPE_INSTANCE_GET_PRIVATE ((obj), LM_TYPE_DUMMY, LmDummyPrivate))
 
-typedef struct LmDummyPriv LmDummyPriv;
-struct LmDummyPriv {
+typedef struct LmDummyPrivate LmDummyPrivate;
+struct LmDummyPrivate {
     gint my_prop;
 };
 
@@ -38,7 +38,7 @@ static void     dummy_set_property        (GObject           *object,
                                            const GValue      *value,
                                            GParamSpec        *pspec);
 
-G_DEFINE_TYPE (LmDummy, lm_dummy, G_TYPE_OBJECT)
+G_DEFINE_TYPE_WITH_PRIVATE (LmDummy, lm_dummy, G_TYPE_OBJECT)
 
 enum {
     PROP_0,
@@ -78,8 +78,6 @@ lm_dummy_class_init (LmDummyClass *class)
                       _lm_marshal_VOID__INT,
                       G_TYPE_NONE,
                       1, G_TYPE_INT);
-
-    g_type_class_add_private (object_class, sizeof (LmDummyPriv));
 }
 
 static void
@@ -102,7 +100,7 @@ dummy_get_property (GObject    *object,
                     GValue     *value,
                     GParamSpec *pspec)
 {
-    LmDummyPriv *priv;
+    LmDummyPrivate *priv;
 
     priv = GET_PRIV (object);
 
@@ -122,7 +120,7 @@ dummy_set_property (GObject      *object,
                     const GValue *value,
                     GParamSpec   *pspec)
 {
-    LmDummyPriv *priv;
+    LmDummyPrivate *priv;
 
     priv = GET_PRIV (object);
 

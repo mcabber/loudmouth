@@ -22,10 +22,10 @@
 #include "lm-xmpp-writer.h"
 #include "lm-simple-io.h"
 
-#define GET_PRIV(obj) (G_TYPE_INSTANCE_GET_PRIVATE ((obj), LM_TYPE_SIMPLE_IO, LmSimpleIOPriv))
+#define GET_PRIV(obj) (G_TYPE_INSTANCE_GET_PRIVATE ((obj), LM_TYPE_SIMPLE_IO, LmSimpleIOPrivate))
 
-typedef struct LmSimpleIOPriv LmSimpleIOPriv;
-struct LmSimpleIOPriv {
+typedef struct LmSimpleIOPrivate LmSimpleIOPrivate;
+struct LmSimpleIOPrivate {
     gint my_prop;
 };
 
@@ -46,6 +46,7 @@ static void     simple_io_send_text           (LmXmppWriter      *writer,
                                                gsize              len);
 
 G_DEFINE_TYPE_WITH_CODE (LmSimpleIO, lm_simple_io, G_TYPE_OBJECT,
+                         G_ADD_PRIVATE (LmSimpleIO)
                          G_IMPLEMENT_INTERFACE (LM_TYPE_XMPP_WRITER,
                                                 simple_io_writer_iface_init))
 
@@ -70,8 +71,6 @@ lm_simple_io_class_init (LmSimpleIOClass *class)
                                                           "My Property",
                                                           NULL,
                                                           G_PARAM_READWRITE));
-
-    g_type_class_add_private (object_class, sizeof (LmSimpleIOPriv));
 }
 
 static void
@@ -101,7 +100,7 @@ simple_io_get_property (GObject    *object,
                         GValue     *value,
                         GParamSpec *pspec)
 {
-    LmSimpleIOPriv *priv;
+    LmSimpleIOPrivate *priv;
 
     priv = GET_PRIV (object);
 
@@ -121,7 +120,7 @@ simple_io_set_property (GObject      *object,
                         const GValue *value,
                         GParamSpec   *pspec)
 {
-    LmSimpleIOPriv *priv;
+    LmSimpleIOPrivate *priv;
 
     priv = GET_PRIV (object);
 

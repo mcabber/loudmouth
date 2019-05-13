@@ -38,10 +38,10 @@
 #include "lm-misc.h"
 #include "lm-asyncns-resolver.h"
 
-#define GET_PRIV(obj) (G_TYPE_INSTANCE_GET_PRIVATE ((obj), LM_TYPE_ASYNCNS_RESOLVER, LmAsyncnsResolverPriv))
+#define GET_PRIV(obj) (G_TYPE_INSTANCE_GET_PRIVATE ((obj), LM_TYPE_ASYNCNS_RESOLVER, LmAsyncnsResolverPrivate))
 
-typedef struct LmAsyncnsResolverPriv LmAsyncnsResolverPriv;
-struct LmAsyncnsResolverPriv {
+typedef struct LmAsyncnsResolverPrivate LmAsyncnsResolverPrivate;
+struct LmAsyncnsResolverPrivate {
     GSource     *watch_resolv;
     asyncns_query_t *resolv_query;
     asyncns_t   *asyncns_ctx;
@@ -53,7 +53,7 @@ static void     asyncns_resolver_lookup        (LmResolver  *resolver);
 static void     asyncns_resolver_cleanup       (LmResolver  *resolver);
 static void     asyncns_resolver_cancel        (LmResolver  *resolver);
 
-G_DEFINE_TYPE (LmAsyncnsResolver, lm_asyncns_resolver, LM_TYPE_RESOLVER)
+G_DEFINE_TYPE_WITH_PRIVATE (LmAsyncnsResolver, lm_asyncns_resolver, LM_TYPE_RESOLVER)
 
 static void
 lm_asyncns_resolver_class_init (LmAsyncnsResolverClass *class)
@@ -65,8 +65,6 @@ lm_asyncns_resolver_class_init (LmAsyncnsResolverClass *class)
 
     resolver_class->lookup = asyncns_resolver_lookup;
     resolver_class->cancel = asyncns_resolver_cancel;
-
-    g_type_class_add_private (object_class, sizeof (LmAsyncnsResolverPriv));
 }
 
 static void
@@ -87,7 +85,7 @@ asyncns_resolver_dispose (GObject *object)
 static void
 asyncns_resolver_cleanup (LmResolver *resolver)
 {
-    LmAsyncnsResolverPriv *priv = GET_PRIV (resolver);
+    LmAsyncnsResolverPrivate *priv = GET_PRIV (resolver);
 
     if (priv->resolv_channel != NULL) {
         g_io_channel_unref (priv->resolv_channel);
@@ -110,7 +108,7 @@ asyncns_resolver_cleanup (LmResolver *resolver)
 static void
 asyncns_resolver_done (LmResolver *resolver)
 {
-    LmAsyncnsResolverPriv *priv = GET_PRIV (resolver);
+    LmAsyncnsResolverPrivate *priv = GET_PRIV (resolver);
     struct addrinfo       *ans;
     int                err;
 
@@ -142,7 +140,7 @@ asyncns_resolver_io_cb (GSource      *source,
                         GIOCondition  condition,
                         LmResolver   *resolver)
 {
-    LmAsyncnsResolverPriv     *priv = GET_PRIV (resolver);
+    LmAsyncnsResolverPrivate     *priv = GET_PRIV (resolver);
     LmAsyncnsResolverCallback  func;
 
     asyncns_wait (priv->asyncns_ctx, FALSE);
@@ -159,7 +157,7 @@ asyncns_resolver_io_cb (GSource      *source,
 static gboolean
 asyncns_resolver_prep (LmResolver *resolver, GError **error)
 {
-    LmAsyncnsResolverPriv *priv = GET_PRIV (resolver);
+    LmAsyncnsResolverPrivate *priv = GET_PRIV (resolver);
     GMainContext          *context;
 
     if (priv->asyncns_ctx) {
@@ -193,7 +191,7 @@ asyncns_resolver_prep (LmResolver *resolver, GError **error)
 static void
 asyncns_resolver_lookup_host (LmResolver *resolver)
 {
-    LmAsyncnsResolverPriv *priv = GET_PRIV (resolver);
+    LmAsyncnsResolverPrivate *priv = GET_PRIV (resolver);
     gchar               *host;
     struct addrinfo      req;
 
@@ -226,7 +224,7 @@ asyncns_resolver_lookup_host (LmResolver *resolver)
 static void
 asyncns_resolver_srv_done (LmResolver *resolver)
 {
-    LmAsyncnsResolverPriv *priv = GET_PRIV (resolver);
+    LmAsyncnsResolverPrivate *priv = GET_PRIV (resolver);
     unsigned char         *srv_ans;
     int                    srv_len;
     gboolean               result = FALSE;
@@ -281,7 +279,7 @@ asyncns_resolver_srv_done (LmResolver *resolver)
 static void
 asyncns_resolver_lookup_service (LmResolver *resolver)
 {
-    LmAsyncnsResolverPriv *priv = GET_PRIV (resolver);
+    LmAsyncnsResolverPrivate *priv = GET_PRIV (resolver);
     gchar                 *domain;
     gchar                 *service;
     gchar                 *protocol;
@@ -348,7 +346,7 @@ asyncns_resolver_lookup (LmResolver *resolver)
 static void
 asyncns_resolver_cancel (LmResolver *resolver)
 {
-    LmAsyncnsResolverPriv *priv;
+    LmAsyncnsResolverPrivate *priv;
 
     g_return_if_fail (LM_IS_ASYNCNS_RESOLVER (resolver));
 
