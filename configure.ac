@@ -200,7 +200,7 @@ if test "x$ac_ssl" = "xgnutls"; then
     PKG_CHECK_MODULES(LIBGNUTLS, [gnutls >= $GNUTLS_REQUIRED])
     CFLAGS="$CFLAGS $LIBGNUTLS_CFLAGS"
     LIBS="$LIBS $LIBGNUTLS_LIBS"
-    AC_DEFINE(HAVE_GNUTLS, 1, [whether to use GnuTSL support.])
+    AC_DEFINE(HAVE_GNUTLS, 1, [whether to use GnuTLS support.])
     enable_ssl=GnuTLS
   else
     AC_MSG_ERROR([GnuTLS was not found, use
