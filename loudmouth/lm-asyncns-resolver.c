@@ -21,7 +21,6 @@
 #include <string.h>
 #ifdef HAVE_ASYNCNS
 #include <asyncns.h>
-#define freeaddrinfo(x) asyncns_freeaddrinfo(x)
 
 /* Needed on Mac OS X */
 #if HAVE_ARPA_NAMESER_COMPAT_H

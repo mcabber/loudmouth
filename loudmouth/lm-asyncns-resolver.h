@@ -19,7 +19,13 @@
 #ifndef __LM_ASYNCNS_RESOLVER_H__
 #define __LM_ASYNCNS_RESOLVER_H__
 
+#include <config.h>
+
 #include <glib-object.h>
+
+#ifdef HAVE_ASYNCNS
+#define freeaddrinfo(x) asyncns_freeaddrinfo(x)
+#endif
 
 #include "lm-resolver.h"
 
