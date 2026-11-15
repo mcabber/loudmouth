@@ -926,8 +926,8 @@ connection_socket_connect_cb (LmOldSocket  *socket,
 static gboolean
 connection_get_server_from_jid (const gchar *jid, gchar **server)
 {
-    gchar *ch;
-    gchar *ch_end;
+    const gchar *ch;
+    const gchar *ch_end;
 
     if (jid != NULL && (ch = strchr (jid, '@')) != NULL) {
         ch_end = strchr(ch + 1, '/');
