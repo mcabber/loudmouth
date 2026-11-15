@@ -77,13 +77,14 @@ gchar *
 _lm_utils_generate_id (void)
 {
     static guint  last_id = 0;
-    GTimeVal      tv;
-    glong         val;
+    gint64        now;
+    glong         val, usec;
 
-    g_get_current_time (&tv);
-    val = (tv.tv_sec & tv.tv_usec) + last_id++;
+    now = g_get_real_time ();
+    usec = now % G_USEC_PER_SEC;
+    val = ((now / G_USEC_PER_SEC) & usec) + last_id++;
 
-    return g_strdup_printf ("%ld%ld", val, tv.tv_usec);
+    return g_strdup_printf ("%ld%ld", val, usec);
 }
 
 gchar*
